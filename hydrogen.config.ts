@@ -1,9 +1,32 @@
-import {defineConfig} from '@shopify/hydrogen/config';
+import { defineConfig, CookieSessionStorage } from '@shopify/hydrogen/config'
+
+
 
 export default defineConfig({
   shopify: {
-    storeDomain: 'hydrogen-preview.myshopify.com',
-    storefrontToken: '3b580e70970c4528da70c98e097c2fa0',
+    defaultCountryCode: 'US',
+    defaultLanguageCode: 'EN',
+    storeDomain:
+      // @ts-ignore
+      import.meta.env.VITE_PUBLIC_STORE_DOMAIN,
+    storefrontToken:
+      // @ts-ignore
+      import.meta.env.VITE_STOREFRONT_API_TOKEN,
+    privateStorefrontToken:
+      // @ts-ignore
+      import.meta.env.VITE_PRIVATE_STOREFRONT_API_TOKEN,
     storefrontApiVersion: '2022-07',
+    // @ts-ignore
+    storefrontId: import.meta.env.VITE_STOREFRONT_ID,
+
   },
-});
+
+
+  session: CookieSessionStorage('__session', {
+    path: '/',
+    httpOnly: true,
+    secure: import.meta.env.PROD,
+    sameSite: 'Strict',
+    maxAge: 60 * 60 * 24 * 30,
+  }),
+})
